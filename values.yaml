@@ -47,6 +47,11 @@ backup:
 
 mysql:
   enabled: true
+  auth:
+    rootPassword: rootpassword
+    database: ghost
+    username: ghost
+    password: ghostpassword
   primary:
     readinessProbe:
       enabled: true
@@ -55,12 +60,6 @@ mysql:
       timeoutSeconds: 1
       successThreshold: 1
       failureThreshold: 3
-  auth:
-    rootPassword: rootpassword
-    database: ghost
-    username: ghost
-    password: ghostpassword
-  primary:
     persistence:
       enabled: true
       size: 8Gi
