@@ -1,13 +1,15 @@
 ghost:
+  name: ghost-blog
+  fullnameOverride: ghost-blog-test
   image:
     repository: ghost
     tag: "5.75.1-alpine"
     pullPolicy: IfNotPresent
 
   settings:
-    url: http://ghost.local
+    url: http://localhost:2368/
     admin:
-      url: http://ghost.local/ghost
+      url: http://localhost:2368/ghost
 
 replicaCount: 1
 
@@ -69,5 +71,5 @@ mysql:
         schedule: "0 2 * * *"  # Бэкап каждый день в 2 утра
       persistence:
         enabled: true
-        storageClass: "standard"  # Укажите ваш storage class
+        storageClass: "standard" 
         size: 8Gi
