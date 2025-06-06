@@ -1,0 +1,9 @@
+{{- if and .Values.backup .Values.backup.velero.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "ghost-blog.fullname" . }}-backup-annotations
+  annotations:
+    {{- toYaml .Values.backup.velero.annotations | nindent 4 }}
+data: {}
+{{- end }}

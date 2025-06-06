@@ -18,12 +18,17 @@ service:
 ingress:
   enabled: true
   className: nginx
-  annotations: {}
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
   hosts:
-    - host: ghost.local
+    - host: ghost.example.com
       paths:
         - path: /
           pathType: Prefix
+  tls:
+    - secretName: ghost-tls
+      hosts:
+        - ghost.example.com
 
 resources:
   limits:
@@ -33,8 +38,23 @@ resources:
     cpu: 500m
     memory: 512Mi
 
+backup:
+  velero:
+    enabled: true
+    annotations:
+      velero.io/backup-volumes: data,backup
+      backup.velero.io/backup-volumes-excludes: temp-data
+
 mysql:
   enabled: true
+  primary:
+    readinessProbe:
+      enabled: true
+      initialDelaySeconds: 5
+      periodSeconds: 10
+      timeoutSeconds: 1
+      successThreshold: 1
+      failureThreshold: 3
   auth:
     rootPassword: rootpassword
     database: ghost
@@ -44,3 +64,11 @@ mysql:
     persistence:
       enabled: true
       size: 8Gi
+    backup:
+      enabled: true
+      cronjob:
+        schedule: "0 2 * * *"  # Бэкап каждый день в 2 утра
+      persistence:
+        enabled: true
+        storageClass: "standard"  # Укажите ваш storage class
+        size: 8Gi

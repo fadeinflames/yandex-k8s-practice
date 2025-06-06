@@ -1,0 +1,13 @@
+{{- if .Values.mysql.primary.backup.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "ghost-blog.fullname" . }}-backup
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ .Values.mysql.primary.backup.persistence.storageClass }}
+  resources:
+    requests:
+      storage: {{ .Values.mysql.primary.backup.persistence.size }}
+{{- end }}

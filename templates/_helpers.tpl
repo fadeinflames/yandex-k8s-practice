@@ -1,14 +1,12 @@
 {{/*
-Expand the name of the chart.
+Эта функция определяет базовое имя чарта
 */}}
 {{- define "ghost-blog.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
-Create a default fully qualified app name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-If release name contains chart name it will be used as a full name.
+Эта функция создает полное имя приложения
 */}}
 {{- define "ghost-blog.fullname" -}}
 {{- if .Values.fullnameOverride }}
@@ -24,14 +22,14 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 
 {{/*
-Create chart name and version as used by the chart label.
+Создает метку с версией чарта
 */}}
 {{- define "ghost-blog.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
-Common labels
+Определяет стандартный набор меток Kubernetes
 */}}
 {{- define "ghost-blog.labels" -}}
 helm.sh/chart: {{ include "ghost-blog.chart" . }}
@@ -43,7 +41,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
-Selector labels
+Определяет метки для селекторов
 */}}
 {{- define "ghost-blog.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "ghost-blog.name" . }}
