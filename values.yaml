@@ -1,0 +1,46 @@
+ghost:
+  image:
+    repository: ghost
+    tag: "5.75.1-alpine"
+    pullPolicy: IfNotPresent
+
+  settings:
+    url: http://ghost.local
+    admin:
+      url: http://ghost.local/ghost
+
+replicaCount: 1
+
+service:
+  type: ClusterIP
+  port: 2368
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations: {}
+  hosts:
+    - host: ghost.local
+      paths:
+        - path: /
+          pathType: Prefix
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1024Mi
+  requests:
+    cpu: 500m
+    memory: 512Mi
+
+mysql:
+  enabled: true
+  auth:
+    rootPassword: rootpassword
+    database: ghost
+    username: ghost
+    password: ghostpassword
+  primary:
+    persistence:
+      enabled: true
+      size: 8Gi

@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ghost-blog.fullname" . }}
+  labels:
+    {{- include "ghost-blog.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "ghost-blog.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "ghost-blog.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.ghost.image.repository }}:{{ .Values.ghost.image.tag }}"
+          imagePullPolicy: {{ .Values.ghost.image.pullPolicy }}
+          ports:
+            - containerPort: 2368
+              protocol: TCP
+          env:
+            - name: database__client
+              value: mysql
+            - name: database__connection__host
+              value: {{ .Release.Name }}-mysql
+            - name: database__connection__user
+              value: {{ .Values.mysql.auth.username }}
+            - name: database__connection__password
+              value: {{ .Values.mysql.auth.password }}
+            - name: database__connection__database
+              value: {{ .Values.mysql.auth.database }}
+            - name: url
+              value: {{ .Values.ghost.settings.url }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
